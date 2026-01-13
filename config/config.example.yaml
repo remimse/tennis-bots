@@ -1,0 +1,51 @@
+# iCondo Tennis Court Booking Configuration
+
+booking:
+  # Days to attempt booking (lowercase)
+  preferred_days:
+    - saturday
+    - sunday
+
+  # Preferred time window (24-hour format)
+  preferred_times:
+    start_time: "08:00"
+    end_time: "11:00"
+
+  # Court preference order (first = highest priority)
+  # Adjust names to match your condo's court names
+  preferred_courts:
+    - "Tennis Court 1"
+    - "Tennis Court 2"
+
+  # Booking duration in hours (usually 1 or 2)
+  booking_duration_hours: 1
+
+  # Days in advance when slots become available
+  # Most condos open bookings 7 days ahead
+  advance_booking_days: 7
+
+scheduler:
+  # Time to trigger booking attempt (Singapore timezone)
+  # Set to just after midnight when new slots typically open
+  trigger_time: "00:00:05"
+
+  # Number of retry attempts if booking fails
+  retry_count: 3
+
+  # Delay between retries in seconds
+  retry_delay_seconds: 5
+
+notifications:
+  # Enable/disable notifications
+  enabled: true
+
+browser:
+  # Run browser in headless mode (no visible window)
+  headless: true
+
+  # Slow down browser actions for debugging (milliseconds)
+  # Set to 0 for production, 100-500 for debugging
+  slow_mo: 0
+
+  # Take screenshot when errors occur
+  screenshot_on_error: true

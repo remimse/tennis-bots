@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  tennis-bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: icondo-tennis-bot
+    restart: unless-stopped
+
+    # Critical for Chromium browser stability in containers
+    ipc: host
+    init: true
+
+    # Environment variables from .env file
+    environment:
+      - ICONDO_USERNAME=${ICONDO_USERNAME}
+      - ICONDO_PASSWORD=${ICONDO_PASSWORD}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - BROWSER_HEADLESS=true
+      - TZ=Asia/Singapore
+
+    # Mount volumes for persistence
+    volumes:
+      # Persist logs
+      - ../logs:/app/logs
+      # Persist screenshots for debugging
+      - ../screenshots:/app/screenshots
+      # Mount config file (create config.yaml from config.example.yaml)
+      - ../config/config.yaml:/app/config/config.yaml:ro
+      # Persist browser session (optional, for session reuse)
+      - ../storage:/app/storage
+
+    # Shared memory size for Chromium browser
+    # Chromium uses /dev/shm for temporary files
+    shm_size: '2gb'
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Run a single booking attempt (for testing)
+  tennis-bot-once:
+    profiles:
+      - manual
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: icondo-tennis-bot-once
+    ipc: host
+    init: true
+    environment:
+      - ICONDO_USERNAME=${ICONDO_USERNAME}
+      - ICONDO_PASSWORD=${ICONDO_PASSWORD}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - BROWSER_HEADLESS=true
+      - TZ=Asia/Singapore
+    volumes:
+      - ../logs:/app/logs
+      - ../screenshots:/app/screenshots
+      - ../config/config.yaml:/app/config/config.yaml:ro
+    shm_size: '2gb'
+    # Override command to run once
+    command: ["python", "scripts/run_once.py", "--headless"]

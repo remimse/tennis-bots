@@ -1,0 +1,20 @@
+# Browser automation
+playwright>=1.40.0
+
+# Configuration
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Scheduling
+apscheduler>=3.10.0
+
+# HTTP client (for notifications)
+aiohttp>=3.9.0
+
+# Retry logic
+tenacity>=8.2.0
+
+# Logging
+structlog>=23.0.0
